@@ -7,12 +7,16 @@ Escriba el codigo que ejecute la accion solicitada.
 import os
 import pandas as pd
 import zipfile
-from datetime import datetime
+
 def clean_campaign_data():
     input_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\input"
-    output_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\outputc"
+    output_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\output"
 
     os.makedirs(output_folder, exist_ok=True)
+    month_map = {
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+        "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12
+    }
 
     client_data = []
     campaign_data = []
@@ -30,8 +34,7 @@ def clean_campaign_data():
                                 df = pd.read_csv(file)
                                 print(f"Columnas en {csv_file}: {list(df.columns)}")
                                 
-                                # Procesar client.csv
-                                if {"age", "job", "marital", "education", "credit_default", "mortage"}.issubset(df.columns):
+                                if {"age", "job", "marital", "education", "credit_default", "mortgage"}.issubset(df.columns):
                                     client_data.extend(
                                         {
                                             "client_id": row["client_id"],
@@ -40,37 +43,34 @@ def clean_campaign_data():
                                             "marital": row["marital"],
                                             "education": None if row["education"] == "unknown" else row["education"].replace(".", "_"),
                                             "credit_default": 1 if row["credit_default"] == "yes" else 0,
-                                            "mortage": 1 if row["mortage"] == "yes" else 0,
+                                            "mortgage": 1 if row["mortgage"] == "yes" else 0,
                                         }
                                         for _, row in df.iterrows()
                                     )
                                 else:
                                     print(f"Faltan columnas en {csv_file} para procesar client.csv")
 
-                                # Procesar campaign.csv
-                                if {"number_contacts", "contact_duration", "previous_campaing_contacts", "previous_outcome", "campaign_outcome", "day", "month"}.issubset(df.columns):
+                                if {"number_contacts", "contact_duration", "previous_campaign_contacts", "previous_outcome", "campaign_outcome", "day", "month"}.issubset(df.columns):
                                     campaign_data.extend(
                                         {
                                             "client_id": row["client_id"],
                                             "number_contacts": row["number_contacts"],
                                             "contact_duration": row["contact_duration"],
-                                            "previous_campaing_contacts": row["previous_campaing_contacts"],
+                                            "previous_campaign_contacts": row["previous_campaign_contacts"],
                                             "previous_outcome": 1 if row["previous_outcome"] == "success" else 0,
                                             "campaign_outcome": 1 if row["campaign_outcome"] == "yes" else 0,
-                                            "last_contact_day": f"2022-{row['month']}-{row['day']:02d}",
+                                            "last_contact_date": f"2022-{month_map[row['month'].strip().lower()]:02d}-{int(row['day']):02d}",
                                         }
                                         for _, row in df.iterrows()
                                     )
                                 else:
                                     print(f"Faltan columnas en {csv_file} para procesar campaign.csv")
-
-                                # Procesar economics.csv
-                                if {"const_price_idx", "eurobor_three_months"}.issubset(df.columns):
+                                if {"cons_price_idx", "euribor_three_months"}.issubset(df.columns):
                                     economics_data.extend(
                                         {
                                             "client_id": row["client_id"],
-                                            "const_price_idx": row["const_price_idx"],
-                                            "eurobor_three_months": row["eurobor_three_months"],
+                                            "cons_price_idx": row["cons_price_idx"],
+                                            "euribor_three_months": row["euribor_three_months"],
                                         }
                                         for _, row in df.iterrows()
                                     )
@@ -79,8 +79,8 @@ def clean_campaign_data():
 
                             except pd.errors.EmptyDataError:
                                 print(f"Archivo {csv_file} está vacío o tiene errores.")
-    
-    # Guardar archivos de salida
+                            except KeyError as e:
+                                print(f"Error procesando {csv_file}: {e}")
     if client_data:
         client_df = pd.DataFrame(client_data)
         client_df.to_csv(os.path.join(output_folder, "client.csv"), index=False)
