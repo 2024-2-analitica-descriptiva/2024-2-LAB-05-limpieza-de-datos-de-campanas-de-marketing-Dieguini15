@@ -11,7 +11,6 @@ import zipfile
 def clean_campaign_data():
     input_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\input"
     output_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\output"
-
     os.makedirs(output_folder, exist_ok=True)
     month_map = {
         "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
