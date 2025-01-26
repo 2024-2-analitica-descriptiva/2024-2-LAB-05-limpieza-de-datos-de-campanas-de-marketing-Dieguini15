@@ -9,7 +9,7 @@ import pandas as pd
 import zipfile
 
 def clean_campaign_data():
-    input_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\input"
+    input_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\input"
     output_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\output"
     os.makedirs(output_folder, exist_ok=True)
     month_map = {
