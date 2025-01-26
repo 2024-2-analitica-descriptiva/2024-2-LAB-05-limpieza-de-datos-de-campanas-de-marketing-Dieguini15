@@ -3,15 +3,22 @@ Escriba el codigo que ejecute la accion solicitada.
 """
 
 # pylint: disable=import-outside-toplevel
-
 import os
 import pandas as pd
 import zipfile
-
 def clean_campaign_data():
-    input_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\input"
+    input_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\input"
     output_folder = r"C:\analiticadescriptiva\2024-2-LAB-05-limpieza-de-datos-de-campanas-de-marketing-Dieguini15\files\output"
-    os.makedirs(output_folder, exist_ok=True)
+    
+    # Crear las carpetas si no existen
+    if not os.path.exists(input_folder):
+        print(f"El directorio de entrada no existe: {input_folder}")
+        os.makedirs(input_folder, exist_ok=True)
+        print(f"Directorio creado. Coloca los archivos ZIP en: {input_folder}")
+        return  # Salir del programa hasta que se coloquen los archivos
+    
+    os.makedirs(output_folder, exist_ok=True)  # Crear el directorio de salida si no existe
+    
     month_map = {
         "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
         "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12
